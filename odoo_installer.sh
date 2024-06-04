@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define variables correctly
-projname="odooV14sample2"
-python_version="python3"
+projname="odoo-simsV16"
+python_version="python3.8"
 db_port=5432
 db_password="digipg@dm1n"
 xmlrpc_port=1234
@@ -19,8 +19,17 @@ fi
 # Clone Odoo repository
 sudo mkdir -p /opt/$projname
 sudo chown $projname:$projname /opt/$projname
-sudo -u $projname git clone https://www.github.com/odoo/odoo --depth 1 --branch 14.0 /opt/$projname/$projname
+
+sudo apt install $python_version-pip libldap2-dev libpq-dev libsasl2-dev
+sudo apt-get install $python_version-dev build-essential libjpeg-dev libpq-dev libjpeg8-dev libxml2-dev libssl-dev libffi-dev libmysqlclient-dev libxslt1-dev zlib1g-dev libsasl2-dev libldap2-dev liblcms2-dev 
+
+sudo wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.bionic_amd64.deb 
+sudo dpkg -i wkhtmltox_0.12.5-1.bionic_amd64.deb 
+sudo apt install -f
+
+sudo -u $projname git clone https://www.github.com/odoo/odoo --depth 1 --branch 16.0 /opt/$projname/$projname
 cd /opt/$projname
+
 
 # Create virtual environment and activate it
 sudo -u $projname $python_version -m venv $projname-venv
@@ -29,7 +38,7 @@ source $projname-venv/bin/activate
 # Install Python dependencies
 pip install wheel
 pip install -r /opt/$projname/$projname/requirements.txt
-pip install Babel decorator docutils ebaysdk feedparser gevent greenlet html2text Jinja2 lxml Mako MarkupSafe mock num2words ofxparse passlib Pillow psutil psycopg2 pydot pyparsing PyPDF2 pyserial python-dateutil python-openid pytz pyusb PyYAML qrcode reportlab requests six suds-jurko vatnumber vobject Werkzeug XlsxWriter xlwt xlrd gdata
+#pip install Babel decorator docutils ebaysdk feedparser gevent greenlet html2text Jinja2 lxml Mako MarkupSafe mock num2words ofxparse passlib Pillow psutil psycopg2 pydot pyparsing PyPDF2 pyserial python-dateutil python-openid pytz pyusb PyYAML qrcode reportlab requests six suds-jurko vatnumber vobject Werkzeug XlsxWriter xlwt xlrd gdata
 
 # Deactivate virtual environment
 deactivate
@@ -58,7 +67,7 @@ EOF
 # Create systemd service file
 sudo tee /etc/systemd/system/$projname.service > /dev/null << EOF
 [Unit]
-Description=$projname Odoo Version 14.0
+Description=$projname Odoo Version 16.0
 Requires=$postgresql.service 
 After=network.target $postgresql.service 
 
@@ -68,7 +77,7 @@ SyslogIdentifier=$projname
 PermissionsStartOnly=true
 User=$projname
 Group=$projname
-ExecStart=/opt/$projname/$projname-venv/bin/python3 /opt/$projname/$projname/odoo-bin -c /etc/$projname.conf --logfile /var/log/$projname/$projname-server.log
+ExecStart=/opt/$projname/$projname-venv/bin/$python_version /opt/$projname/$projname/odoo-bin -c /etc/$projname.conf --logfile /var/log/$projname/$projname-server.log
 StandardOutput=journal+console
 Restart=always
 
