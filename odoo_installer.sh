@@ -1,12 +1,13 @@
 #!/bin/bash
+#odoo 16 python version recommended 3.8 or lately in postgresql version postgresql-12
 
 # Define variables correctly
-projname="odoo-simsV16"
-python_version="python3.8"
+projname="odooV16-enterprice"
+python_version="python3.8"  #python3 is default specifityin a version use python3.* sample python3.11
 db_port=5432
 db_password="digipg@dm1n"
 xmlrpc_port=1234
-postgresql="postgresql-10"
+postgresql="postgresql-12"
 
 # Update system packages
 sudo apt update && sudo apt-get dist-upgrade -y
