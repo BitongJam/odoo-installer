@@ -2,12 +2,12 @@
 #odoo 16 python version recommended 3.8 or lately in postgresql version postgresql-12
 
 # Define variables correctly
-projname="odooV16-enterprice"
-python_version="python3.8"  #python3 is default specifityin a version use python3.* sample python3.11
+projname="simsV16"
+python_version="python3"  #python3 is default specifityin a version use python3.* sample python3.11
 db_port=5432
 db_password="digipg@dm1n"
 xmlrpc_port=1234
-postgresql="postgresql-12"
+postgresql="postgresql"
 
 # Update system packages
 sudo apt update && sudo apt-get dist-upgrade -y
@@ -29,6 +29,7 @@ sudo dpkg -i wkhtmltox_0.12.5-1.bionic_amd64.deb
 sudo apt install -f
 
 sudo -u $projname git clone https://www.github.com/odoo/odoo --depth 1 --branch 16.0 /opt/$projname/$projname
+sudo mkdir /opt/$projname/$projname/custom_apps
 cd /opt/$projname
 
 
@@ -57,7 +58,7 @@ db_port = $db_port
 db_user = $projname
 db_password = $db_password
 logfile = /var/log/$projname/$projname-server.log
-addons_path = /opt/$projname/$projname/addons
+addons_path = /opt/$projname/$projname/addons,/opt/$projname/$projname/custom_apps
 xmlrpc_port = $xmlrpc_port
 log_db = True
 log_db_level = warning
